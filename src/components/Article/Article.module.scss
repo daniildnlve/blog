@@ -1,0 +1,94 @@
+.article {
+  padding: 15px 16px 24px 16px;
+  
+  &__heading {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__title {
+    color: #1890FF;
+    font-size: 20px;
+    margin-right: 12px;
+    text-decoration: none;
+    display: block;
+    max-width: 700px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &__tags {
+    display: flex;
+    column-gap: 8px;
+    margin: 4px 0;
+  }
+
+  &__tag {
+    font-size: 12px;
+    color: #262626;
+    border: 1px solid #262626;
+    border-radius: 2px;
+    padding: 2px 4px;
+  }
+
+  &__tagFull {
+    font-size: 12px;
+    color: #808080;
+    border: 1px solid #808080;
+    border-radius: 2px;
+    padding: 2px 4px;
+  }
+
+  &__info {
+    display: flex;
+    column-gap: 12px;
+    align-items: center;
+  }
+
+  &__date {
+    color: #808080;
+    font-size: 12px;
+  }
+
+  &__text {
+    font-size: 13px;
+    color: #262626;
+    width: 682px;
+    line-height: 22px;
+    max-height: 45px;
+    overflow: hidden;
+  }
+
+  &__textFull {
+    font-size: 13px;
+    color: #808080;
+    width: 682px;
+    line-height: 22px;
+    max-height: 45px;
+  }
+
+  &__body {
+    margin: 26px 0;
+    color: #262626;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+  }
+
+  &__likes {
+    font-size: 12px;
+    color: #262626;
+    display: inline-flex;
+    align-items: center;
+    column-gap: 5px;
+  }
+
+  &__likeButton {
+    width: 16px;
+    height: 14px;
+    background-image: url('./Heart.svg');
+    background-size: 100% 100%;
+  }
+}
+

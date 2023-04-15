@@ -1,0 +1,14 @@
+.header {
+  background-color: #FFFFFF;
+  padding: 14px 22px;
+  display: flex;
+  column-gap: 45px;
+  align-items: center;
+
+  &__title {
+    flex-grow: 1;
+    font-size: 18px;
+    color: #262626;
+    text-decoration: none;
+  }
+}

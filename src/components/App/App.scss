@@ -1,0 +1,93 @@
+// Обнуление стилей
+* {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: #EBEEF3;
+}
+
+button {
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+// Кнопки
+.btn {
+  color: #262626;
+  font-size: 18px;
+  border-color: #262626;
+
+  &-success {
+    color: #52C41A;
+    font-size: 18px;
+    border-color: #52C41A;
+  }
+
+  &-info {
+    color: #1890FF;
+    font-size: 18px;
+    border-color: #1890FF;
+  }
+
+  &-error {
+    color: #F5222D;
+    font-size: 18px;
+    border-color: #F5222D;
+  }
+
+  &-lg-border {
+    border: 1px solid;
+    border-radius: 5px;
+    padding: 10px 18px;
+  }
+}
+
+// Окна
+.frame {
+  
+  &-lg {
+    width: 941px;
+    filter: drop-shadow(0px 4px 12px rgba(0, 0, 0, 0.15));
+    border-radius: 5px;
+    background-color: #FFFFFF;
+  }
+
+  &-sm {
+    width: 384px;
+    border: 1px solid #D9D9D9;
+    box-shadow: 0px 22px 106px rgba(0, 0, 0, 0.07), 
+                0px 9.19107px 44.2843px rgba(0, 0, 0, 0.0503198), 
+                0px 4.91399px 23.6765px rgba(0, 0, 0, 0.0417275),   
+                0px 2.75474px 13.2728px rgba(0, 0, 0, 0.035), 
+                0px 1.46302px 7.04911px rgba(0, 0, 0, 0.0282725), 
+                0px 0.608796px 2.93329px rgba(0, 0, 0, 0.0196802);
+    border-radius: 6px;
+    background-color: #FFFFFF;
+  }
+}
+
+// Пользователь
+.user {
+
+  &-name {
+    color: #262626;
+    font-size: 18px;
+  }
+
+  &-avatar {
+    height: 46px;
+    width: 46px;
+  }
+
+  &-img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+  }
+}
