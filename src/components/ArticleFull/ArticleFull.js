@@ -1,7 +1,7 @@
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { Spin } from "antd"
+import { Spin, Button } from "antd"
 
 import { getArticleThunk, setDefaultArticle } from "../../store/articlesSlice"
 import Article from "../Article/Article"
@@ -10,6 +10,8 @@ import styles from './ArticleFull.module.scss'
 const ArticleFull = () => {
   const {slug} = useParams()
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const goBack = () => navigate('/articles')
 
   const article = useSelector(state => state.articles.article)
   const articlesLoading = useSelector(state => state.articles.articlesLoading)
@@ -21,6 +23,7 @@ const ArticleFull = () => {
 
   return (
     <div className={styles.articleFull}>
+      { !articlesLoading && <Button onClick={goBack} size="large">&#129044; Back</Button>}
       { articlesLoading && <Spin className={styles.articlesSpin} size="large"/>}
       { !articlesLoading && article &&
         <Article 

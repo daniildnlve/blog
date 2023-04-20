@@ -1,5 +1,11 @@
 .article {
   padding: 15px 16px 24px 16px;
+  height: 140px;
+
+  &Full {
+    height: auto;
+    padding: 15px 16px 24px 16px;
+  }
   
   &__heading {
     display: flex;
@@ -11,7 +17,7 @@
     font-size: 20px;
     margin-right: 12px;
     text-decoration: none;
-    display: block;
+    display: inline-flex;
     max-width: 700px;
     overflow: hidden;
     white-space: nowrap;
@@ -66,6 +72,7 @@
     width: 682px;
     line-height: 22px;
     max-height: 45px;
+    flex-grow: 1;
   }
 
   &__body {

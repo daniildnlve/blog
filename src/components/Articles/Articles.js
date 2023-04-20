@@ -49,6 +49,7 @@ const Articles = () => {
         {!articlesLoading && elements}
       </ul>
       {!articlesLoading && <Pagination
+        className={styles.articles__pagination}
         current={page}
         onChange={num => setPage(num)}
         defaultPageSize={5} 

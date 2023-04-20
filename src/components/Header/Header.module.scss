@@ -4,11 +4,28 @@
   display: flex;
   column-gap: 45px;
   align-items: center;
+  height: 80px;
+
+  &Logged {
+    background-color: #FFFFFF;
+    padding: 14px 22px;
+    display: flex;
+    column-gap: 25px;
+    align-items: center;
+    height: 80px;
+  }
 
   &__title {
-    flex-grow: 1;
+    margin-right: auto;
     font-size: 18px;
     color: #262626;
     text-decoration: none;
+  }
+
+  &__user {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    column-gap: 12px;
   }
 }
