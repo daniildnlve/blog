@@ -1,24 +1,25 @@
-import { Outlet } from "react-router-dom"
-import Header from "../Header/Header"
-import { message } from "antd"
-import { createContext } from "react";
+import { Outlet } from 'react-router-dom'
+import { message } from 'antd'
+import { createContext } from 'react'
 
-export const MessageContext = createContext();
+import Header from '../Header/Header'
+
+export const MessageContext = createContext()
 
 const Layout = () => {
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi, contextHolder] = message.useMessage()
 
   const pushMessage = (type, content) => {
     messageApi.open({
       type: type,
       content: content,
-    });
+    })
   }
 
   return (
     <>
       {contextHolder}
-      <MessageContext.Provider value={{pushMessage}}>
+      <MessageContext.Provider value={{ pushMessage }}>
         <Header />
         <Outlet />
       </MessageContext.Provider>

@@ -1,12 +1,12 @@
-import { Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useContext } from "react";
+import { Navigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { useContext } from 'react'
 
-import { PATH_SIGN_IN, PATH_HOME_PAGE } from "../path/path";
-import { MessageContext } from "../components/Layout/Layout";
+import { PATH_SIGN_IN, PATH_HOME_PAGE } from '../path/path'
+import { MessageContext } from '../components/Layout/Layout'
 
-const RequireAuth = ({children, auth}) => {
-  const isAuth = useSelector(state => state.user.isAuth)
+const RequireAuth = ({ children, auth }) => {
+  const isAuth = useSelector((state) => state.user.isAuth)
   const { pushMessage } = useContext(MessageContext)
 
   if (!auth) {

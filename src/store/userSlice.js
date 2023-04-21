@@ -3,12 +3,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import BlogService from '../services/blog-service'
 const blogService = new BlogService()
 
-export const getUserDataThunk = createAsyncThunk('user/getUserDataThunk', async function(token) {
+export const getUserDataThunk = createAsyncThunk('user/getUserDataThunk', async function (token) {
   const res = await blogService.getCurrentUser(token)
   if (!res.ok) {
     throw new Error()
   }
-  return res;
+  return res
 })
 
 const userSlice = createSlice({
@@ -18,7 +18,7 @@ const userSlice = createSlice({
     email: '',
     username: '',
     image: '',
-    token: ''
+    token: '',
   },
   reducers: {
     logOutUser(state) {
@@ -29,18 +29,17 @@ const userSlice = createSlice({
     },
     loadHeader(state) {
       state.isAuth = false
-    }
+    },
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(getUserDataThunk.fulfilled, (state, action) => {
-        state.isAuth = true
-        state.username = action.payload.result.user.username
-        state.image = action.payload.result.user?.image || 'https://static.productionready.io/images/smiley-cyrus.jpg'
-        state.email = action.payload.result.user.email
-        state.token = action.payload.result.user.token
-      })
-  }
+    builder.addCase(getUserDataThunk.fulfilled, (state, action) => {
+      state.isAuth = true
+      state.username = action.payload.result.user.username
+      state.image = action.payload.result.user?.image || 'https://static.productionready.io/images/smiley-cyrus.jpg'
+      state.email = action.payload.result.user.email
+      state.token = action.payload.result.user.token
+    })
+  },
 })
 
 export const { logOutUser, loadHeader } = userSlice.actions

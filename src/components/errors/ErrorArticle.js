@@ -1,12 +1,5 @@
-import { Alert } from "antd"
+import { Alert } from 'antd'
 
-const ErrorArticle = () => (
-  <Alert
-    message="Error"
-    description="Failed to load articles"
-    type="error"
-    showIcon
-  />
-)
+const ErrorArticle = () => <Alert message="Error" description="Failed to load articles" type="error" showIcon />
 
 export default ErrorArticle
