@@ -1,22 +1,24 @@
 export default class BlogService {
   baseUrl = 'https://blog.kata.academy/api'
   
-  async getResource(url) {
-    const res = await fetch(url)
-    if (!res.ok) {
-      throw new Error()
-    }
-    return await res.json()
+  async getArticleList(page = 0, token) {
+    const res = await fetch(`${this.baseUrl}/articles?limit=5&offset=${page}`, {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+    const result = await res.json()
+    return {ok: res.ok, result: result}
   }
 
-  async getArticleList(page = 0) {
-    const res = await this.getResource(`${this.baseUrl}/articles?limit=5&offset=${page}`)
-    return res;
-  }
-
-  async getArticle(slug) {
-    const res = await this.getResource(`${this.baseUrl}/articles/${slug}`)
-    return res;
+  async getArticle(slug, token) {
+    const res = await fetch(`${this.baseUrl}/articles/${slug}`, {
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+    const result = await res.json()
+    return {ok: res.ok, result: result}
   }
 
   async registerUser(data) {
@@ -28,7 +30,7 @@ export default class BlogService {
       body: JSON.stringify(data)
     }) 
     const result = await res.json()
-    return [res.ok, result]
+    return {ok: res.ok, result: result}
   }
 
   async loginUser(data) {
@@ -40,7 +42,7 @@ export default class BlogService {
       body: JSON.stringify(data)
     })
     const result = await res.json()
-    return [res.ok, result]
+    return {ok: res.ok, result: result}
   }
 
   async getCurrentUser(token) {
@@ -51,7 +53,7 @@ export default class BlogService {
       }
     });
     const result = await res.json()
-    return [res.ok, result]
+    return {ok: res.ok, result: result}
   }
 
   async updateCurrentUser(token, data) {
@@ -64,7 +66,7 @@ export default class BlogService {
       body: JSON.stringify(data)
     })
     const result = await res.json()
-    return [res.ok, result]
+    return {ok: res.ok, result: result}
   }
 
   async createArticle(token, data) {
@@ -77,7 +79,7 @@ export default class BlogService {
       body: JSON.stringify(data)
     })
     const result = await res.json()
-    return [res.ok, result]
+    return {ok: res.ok, result: result}
   }
 
   async updateArticle(token, data, slug) {
@@ -90,7 +92,7 @@ export default class BlogService {
       body: JSON.stringify(data)
     })
     const result = await res.json()
-    return [res.ok, result]
+    return {ok: res.ok, result: result}
   }
 
   async deleteArticle (token, slug) {
@@ -101,5 +103,27 @@ export default class BlogService {
       }
     })
     return { ok: res.ok }
+  }
+
+  async likeArticle (token, slug) {
+    const res = await fetch(`${this.baseUrl}/articles/${slug}/favorite`, {
+      method: "POST",
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+    const result = await res.json()
+    return { ok: res.ok, result: result }
+  }
+
+  async removeLikeArticle (token, slug) {
+    const res = await fetch(`${this.baseUrl}/articles/${slug}/favorite`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Token ${token}`
+      }
+    })
+    const result = await res.json()
+    return { ok: res.ok, result: result }
   }
 }

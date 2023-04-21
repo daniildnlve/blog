@@ -4,6 +4,7 @@ import { useState, useContext } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 
+import { PATH_ARTICLES } from "../../path/path";
 import { MessageContext } from "../Layout/Layout";
 import BlogService from '../../services/blog-service';
 const blogService = new BlogService()
@@ -15,7 +16,6 @@ const ArticleForm = ({edit}) => {
   const { pushMessage } = useContext(MessageContext)
   const location = useLocation()
 
-    
   const tagList = edit ? location.state.tagList.map(e => ({
     value: e
   })) : null
@@ -52,10 +52,12 @@ const ArticleForm = ({edit}) => {
       articleData.article.tagList = tags
     }
     const res = edit ? await blogService.updateArticle(token, articleData, location.state.slug) : await blogService.createArticle(token, articleData)
-    if (res[0]) {
+    if (res.ok) {
       setLoading(false)
-      navigate(`/articles/${res[1].article.slug}`)
+      navigate(`${PATH_ARTICLES}/${res.result.article.slug}`)
       pushMessage('success', edit ? 'Article updated successfully' : 'Article created successfully')
+    } else {
+      pushMessage('error', edit ? 'Failed to update article' : 'Failed to create article')
     }
   }
 
@@ -122,8 +124,8 @@ const ArticleForm = ({edit}) => {
             
             {fields.map((field, index) => (
               <div key={field.id} className="form__tags">
-                <input maxLength='25' className="form__input" placeholder="Tag" {...register(`tags.${index}.value`, {
-                  required: true,
+                <input maxLength='25' className="form__input" placeholder="Tag" {...register(`tags[${index}].value`, {
+                  required: 'The tag must not be empty, or delete it',
                   minLength: 1,
                   maxLength: 25
                 })}/>
@@ -140,6 +142,7 @@ const ArticleForm = ({edit}) => {
                     onClick={() => append({ name: '' })}>
                     Add tag
                   </button>}
+                  {errors?.tags?.[index]?.value && <p className='form__error'style={{alignSelf: 'center'}}>{errors?.tags?.[index]?.value?.message}</p>}
               </div>
             ))}
           </label>

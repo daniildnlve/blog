@@ -94,8 +94,18 @@
   &__likeButton {
     width: 16px;
     height: 14px;
-    background-image: url('./Heart.svg');
-    background-size: 100% 100%;
+  }
+
+  &__likeOff {
+    fill: transparent;
+    stroke: #262626;
+    transition: fill, 0.2s, stroke 0.2s;
+    stroke-width: 1;
+  }
+
+  &__likeOn {
+    fill: #FF0707;
+    transition: fill, 0.2s;
   }
 }
 

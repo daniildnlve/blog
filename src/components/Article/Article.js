@@ -3,14 +3,19 @@ import { Link, useNavigate } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import { useSelector } from 'react-redux'
 import { Popconfirm } from 'antd'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 
 import { MessageContext } from '../Layout/Layout';
+import { PATH_ARTICLES, PATH_EDIT_ARTICLE, PATH_SIGN_IN } from '../../path/path'
 import styles from './Article.module.scss'
 import BlogService from '../../services/blog-service'
+
 const blogService = new BlogService()
 
 const Article = ({author, body, description, slug, tagList, favorited, favoritesCount, title, updatedDate, full}) => {
+  const [likes, setLikes] = useState(favoritesCount)
+  const [liked, setLiked] = useState(favorited)
+
   const username = useSelector(state => state.user.username)
   const token = useSelector(state => state.user.token)
 
@@ -29,11 +34,33 @@ const Article = ({author, body, description, slug, tagList, favorited, favorites
     )
   })  
   
+  const toggleFavorite = async () => {
+    if (liked) {
+      const res = await blogService.removeLikeArticle(token, slug) 
+      if (res.ok) {
+        setLiked(res.result.article.favorited)
+        setLikes(res.result.article.favoritesCount)
+      } else {
+        pushMessage('error', 'Failed to like')
+      }
+    } else if (!liked) {
+      const res = await blogService.likeArticle(token, slug)
+      if (res.ok) {
+        setLiked(res.result.article.favorited)
+        setLikes(res.result.article.favoritesCount)
+      } else {
+        pushMessage('error', 'Failed to like')
+      }
+    }
+  }
+
   const deleteArticle = async () => {
     const res = await blogService.deleteArticle(token, slug)
     if (res.ok) {
-      navigate('/articles', {replace: true})
+      navigate(PATH_ARTICLES, {replace: true})
       pushMessage('success', 'Article deleted successfully')
+    } else {
+      pushMessage('error', 'Failed to delete article')
     }
   }
 
@@ -57,11 +84,18 @@ const Article = ({author, body, description, slug, tagList, favorited, favorites
           { full ?
             <span className={styles.article__title}>{title}</span>
             :
-            <Link className={styles.article__title} to={`/articles/${slug}`} >{title}</Link>
+            <Link className={styles.article__title} to={`${PATH_ARTICLES}/${slug}`} >{title}</Link>
           }
           <span className={styles.article__likes}>
-            <button className={styles.article__likeButton}/>
-            {favoritesCount}
+            <button onClick={token ? toggleFavorite : () => {
+              navigate(PATH_SIGN_IN) 
+              pushMessage('info', 'You must be logged in for this action')
+            }} className={styles.article__likeButton}>
+              <svg className={liked ? styles.article__likeOn : styles.article__likeOff} width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 2.56911C7.26154 1.33835 6.03077 0.476807 4.55385 0.476807C2.46154 0.476807 0.861542 2.07681 0.861542 4.16911C0.861542 8.23065 3.07693 8.84604 8 13.523C12.9231 8.84604 15.1385 8.23065 15.1385 4.16911C15.1385 2.07681 13.5385 0.476807 11.4462 0.476807C9.96923 0.476807 8.73846 1.33835 8 2.56911Z"/>
+              </svg>
+            </button>
+            {likes}
           </span>
           <ul className={styles.article__tags}>
             {tags}
@@ -82,7 +116,7 @@ const Article = ({author, body, description, slug, tagList, favorited, favorites
       <div style={{display: 'flex', columnGap: '12px', alignItems: 'center', marginTop: '4px'}}>
         <p className={full ? styles.article__textFull : styles.article__text}>{description}</p>    
         { full && username === author.username && <DeleteButton />}
-        { full && username === author.username && <Link to={`/articles/${slug}/edit`} state={{body, description, tagList, title, slug}} className='btn-success btn-sm-border'>Edit</Link>}
+        { full && username === author.username && <Link to={`${PATH_ARTICLES}/${slug}${PATH_EDIT_ARTICLE}`} state={{body, description, tagList, title, slug}} className='btn-success btn-sm-border'>Edit</Link>}
       </div>
       {full ? <ReactMarkdown className={styles.article__body} children={body}/> : null}
     </div>

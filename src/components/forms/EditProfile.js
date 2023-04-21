@@ -1,9 +1,10 @@
 import { Button } from 'antd';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { getUserDataThunk } from '../../store/userSlice';
+import { MessageContext } from '../Layout/Layout';
 import BlogService from '../../services/blog-service';
 const blogService = new BlogService()
 
@@ -14,6 +15,8 @@ const EditProfile = () => {
   const username = useSelector(state => state.user.username)
   const token = useSelector(state => state.user.token)
 
+  const { pushMessage } = useContext(MessageContext)
+
   const {
     register,
     formState: {
@@ -21,30 +24,30 @@ const EditProfile = () => {
     },
     handleSubmit,
     setError,
-    clearErrors
   } = useForm({
     mode: 'onBlur'
   })
 
   const onSubmit = async (data) => {
+    setLoading(true)
     const filteredKeys = Object.keys(data).filter(key => data[key] !== ""); 
     const filteredObj = filteredKeys.reduce((result, key) => {
       result[key] = data[key];
       return result;
     }, {});
     if (!Object.keys(filteredObj).length) {
-      return console.log('Пустой')
+      setLoading(false)
+      return pushMessage('warning', `You didn't change anything`)
     } else {
-      setLoading(true)
       const res = await blogService.updateCurrentUser(token, {user: {...filteredObj}})
-      if (!res[0]) {
-        if (res[1].errors?.username) {
+      if (!res.ok) {
+        if (res.result.errors?.username) {
           setError('username', {
             type: 'taken',
             message: 'Username is arleady taken'
           })
-        }
-        if (res[1].errors?.email) {
+        }  
+        if (res.result.errors?.email) {
           setError('email', {
             type: 'taken',
             message: 'Email is arleady taken'
@@ -52,16 +55,15 @@ const EditProfile = () => {
         }
         return setLoading(false)
       }
-      if (res[0]) {
+      if (res.ok) {
         dispatch(getUserDataThunk(token))
+        pushMessage('success', 'Profile has changed')
         return setLoading(false)
       }
     }
   }
 
   return (
-    // Не ставил здесь правила "поле не должно быть пустым". Потому что тогда после перезагрузки при первом клике поля с defaultValue расцениваются как пустая строка
-    // и появляется ошибка валидации. Проще не отправлять на сервер пустые или неизменённые значения.
     <div className="form">
       <form className="frame-sm" onSubmit={handleSubmit(onSubmit)}>
         <fieldset className="form__content">
@@ -78,6 +80,15 @@ const EditProfile = () => {
                 value: 20,
                 message: 'Your username needs to be no more than 20 characters'
               },
+              validate: (v) => {
+                if (v.trim().length === 0) {
+                  return 'Username must not be empty'
+                }
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9]+$/,
+                message: 'The username must consist of English letters and numbers without spaces'
+              }
             })} className="form__input" placeholder="Username"/>
             {errors?.username && <p className='form__error'>{errors?.username?.message}</p>}
           </label>
@@ -89,7 +100,12 @@ const EditProfile = () => {
                 value: /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu,
                 message: 'Email is incorrect'
               },
-              setValueAs: v => v.toLowerCase()
+              setValueAs: v => v.toLowerCase(),
+              validate: (v) => {
+                if (v.trim().length === 0) {
+                  return 'Email must not be empty'
+                }
+              }
             })} className="form__input" placeholder="Email address"/>
             {errors?.email && <p className='form__error'>{errors?.email?.message}</p>}
           </label>
@@ -104,6 +120,10 @@ const EditProfile = () => {
               maxLength: {
                 value: 40,
                 message: 'Your password needs to be no more than 40 characters'
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9]+$/,
+                message: 'The password must consist of English letters and numbers without spaces'
               }
             })} type='password' className="form__input" placeholder="New password"/>
             {errors?.password && <p className='form__error'>{errors?.password?.message}</p>}

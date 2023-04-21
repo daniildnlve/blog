@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState, useContext } from 'react';
 
+import { PATH_SIGN_IN, PATH_HOME_PAGE } from '../../path/path';
 import { MessageContext } from '../Layout/Layout';
 import BlogService from '../../services/blog-service';
 const blogService = new BlogService()
@@ -43,22 +44,22 @@ const SignUp = () => {
     }
     const res = await blogService.registerUser(userData)
     setLoading(false)
-    if (!res[0]) {
-      if (res[1].errors?.username) {
+    if (!res.ok) {
+      if (res.result.errors?.username) {
         setError('username', {
           type: 'taken',
           message: 'Username is arleady taken'
         })
       }
-      if (res[1].errors?.email) {
+      if (res.result.errors?.email) {
         setError('email', {
           type: 'taken',
           message: 'Email is arleady taken'
         })
       }
     }
-    if (res[0]) {
-      navigate('/', {replace: true})
+    if (res.ok) {
+      navigate(PATH_HOME_PAGE, {replace: true})
       pushMessage('success', 'Account registered successfully')
     }
   }
@@ -81,6 +82,10 @@ const SignUp = () => {
               maxLength: {
                 value: 20,
                 message: 'Your username needs to be no more than 20 characters'
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9]+$/,
+                message: 'The username must consist of English letters and numbers without spaces'
               }
             })} className="form__input" placeholder="Username"/>
             {errors?.username && <p className='form__error'>{errors?.username?.message}</p>}
@@ -112,6 +117,10 @@ const SignUp = () => {
               maxLength: {
                 value: 40,
                 message: 'Your password needs to be no more than 40 characters'
+              },
+              pattern: {
+                value: /^[a-zA-Z0-9]+$/,
+                message: 'The password must consist of English letters and numbers without spaces'
               }
             })} type='password' className="form__input" placeholder="Password"/>
             {errors?.password && <p className='form__error'>{errors?.password?.message}</p>}
@@ -141,7 +150,7 @@ const SignUp = () => {
           {errors?.agreement && <p className='form__error'>{errors?.agreement.message}</p>}
           
           <Button loading={loading} htmlType='submit' className='form__button' type="primary">Create</Button>
-          <p className='form__tip'>Already have an account? <Link to='/sign-in' className='form__link'>Sign In.</Link></p>
+          <p className='form__tip'>Already have an account? <Link to={PATH_SIGN_IN} className='form__link'>Sign In.</Link></p>
         </fieldset>
       </form>
     </div>

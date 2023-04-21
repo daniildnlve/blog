@@ -5,6 +5,9 @@ const blogService = new BlogService()
 
 export const getUserDataThunk = createAsyncThunk('user/getUserDataThunk', async function(token) {
   const res = await blogService.getCurrentUser(token)
+  if (!res.ok) {
+    throw new Error()
+  }
   return res;
 })
 
@@ -32,10 +35,10 @@ const userSlice = createSlice({
     builder
       .addCase(getUserDataThunk.fulfilled, (state, action) => {
         state.isAuth = true
-        state.username = action.payload[1].user.username
-        state.image = action.payload[1].user?.image || 'https://static.productionready.io/images/smiley-cyrus.jpg'
-        state.email = action.payload[1].user.email
-        state.token = action.payload[1].user.token
+        state.username = action.payload.result.user.username
+        state.image = action.payload.result.user?.image || 'https://static.productionready.io/images/smiley-cyrus.jpg'
+        state.email = action.payload.result.user.email
+        state.token = action.payload.result.user.token
       })
   }
 })

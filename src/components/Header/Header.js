@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { logOutUser } from '../../store/userSlice'
 import { useContext } from 'react'
 
+import { PATH_HOME_PAGE, PATH_SIGN_IN, PATH_SIGN_UP, PATH_PROFILE, PATH_NEW_ARTICLE } from '../../path/path'
 import { MessageContext } from '../Layout/Layout'
 import styles from './Header.module.scss'
 
@@ -17,17 +18,17 @@ const Header = () => {
   const logOut = () => {
     localStorage.removeItem('token');
     dispatch(logOutUser())
-    navigate('/', { replace: true })
+    navigate(PATH_HOME_PAGE, { replace: true })
     pushMessage('success', 'You are logged out')
   }
 
   return (
     <header className={isAuth ? styles.headerLogged : styles.header}>
-      <Link className={styles.header__title} to='/'>Realworld Blog</Link>
-      { isAuth === false && <Link className='btn' to='/sign-in'>Sign In</Link>}
-      { isAuth === false && <Link className='btn-success btn-lg-border' to='/sign-up'>Sign Up</Link>}
-      { isAuth && <Link to='/new-article' replace='true' className='btn-success btn-sm-border'>Create article</Link>}
-      { isAuth && <Link to='/profile' className={styles.header__user}>
+      <Link className={styles.header__title} to={PATH_HOME_PAGE}>Realworld Blog</Link>
+      { isAuth === false && <Link className='btn' to={PATH_SIGN_IN}>Sign In</Link>}
+      { isAuth === false && <Link className='btn-success btn-lg-border' to={PATH_SIGN_UP}>Sign Up</Link>}
+      { isAuth && <Link to={PATH_NEW_ARTICLE} replace='true' className='btn-success btn-sm-border'>Create article</Link>}
+      { isAuth && <Link to={PATH_PROFILE} className={styles.header__user}>
           <p className='user-name'>{username}</p>
           <div className='user-avatar'>
             <img src={image} className='user-img' alt='Аватар'/>
